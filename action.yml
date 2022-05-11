@@ -1,0 +1,17 @@
+name: "AccessifyUI Publish Build"
+description: ""
+author: "The Guardian"
+inputs:
+  storybookBaseUrl:
+    required: true
+    description: "Base URL of storybook server, eg 'http://localhost:8080'"
+  publishKey:
+    required: true
+    description: "Key used for publishing builds to AccessifyUI"
+  publishBaseUrl:
+    required: true
+    description: "AccessifyUI base API URL"
+    default: "https://accessifyui.gutools.co.uk"
+runs:
+  using: "node16"
+  main: "dist/index.js"

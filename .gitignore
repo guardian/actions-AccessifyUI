@@ -1,0 +1,5 @@
+node_modules/
+.vscode
+
+# Un-ignore this once automation is set up.
+dist/
