@@ -1,4 +1,4 @@
-import puppeteer, { SerializedAXNode } from "puppeteer";
+import puppeteer, { Browser, SerializedAXNode } from "puppeteer";
 
 const removeNones = (
   nodes: SerializedAXNode[] | undefined
@@ -22,10 +22,10 @@ const removeNones = (
 };
 
 export const getAccessibilityTree = async (
+  browser: Browser,
   url: string,
   selector: string
 ): Promise<SerializedAXNode[]> => {
-  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.goto(url);
@@ -40,7 +40,7 @@ export const getAccessibilityTree = async (
     interestingOnly: false,
   });
 
-  await browser.close();
+  await page.close();
 
   return removeNones(snapshot.children);
 };

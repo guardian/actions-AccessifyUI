@@ -1,32 +1,16 @@
-import { publish } from "./api";
-import { getAccessibilityTree } from "./puppeteer";
-import { getStorybookComponentUrl, getStorybooks } from "./storybook";
+import * as core from "@actions/core";
+import * as github from "@actions/github";
+import { action } from "./action";
 
-(async () => {
-  const publishKey = "dotcom-rendering";
-  const branch = "main";
-  const storybookBaseUrl =
-    "https://5dfcbf3012392c0020e7140b-gjqnopoekv.chromatic.com";
-  const publishBaseUrl = "https://a11y.ashleigh.rocks";
+async () => {
+  const branch = github.context.ref;
+  const storybookBaseUrl = core.getInput("storybookBaseUrl");
+  const publishBaseUrl = core.getInput("publishBaseUrl");
+  const publishKey = core.getInput("publishKey");
+  const logging = {
+    info: core.info,
+    error: core.error,
+  };
 
-  const stories = await getStorybooks(storybookBaseUrl);
-
-  let accessibilityTrees = await Promise.all(
-    stories.map(async (s) => ({
-      component: s,
-      tree: await getAccessibilityTree(
-        getStorybookComponentUrl(storybookBaseUrl, s),
-        "#root"
-      ),
-    }))
-  );
-
-  await publish(
-    {
-      branch: branch,
-      results: accessibilityTrees,
-    },
-    publishBaseUrl,
-    publishKey
-  );
-})();
+  action(branch, storybookBaseUrl, publishBaseUrl, publishKey, logging);
+};
